@@ -1,0 +1,45 @@
+# Local patient material, including old notebook outputs and figures.
+/private/
+/data/*
+/outputs/
+/_build/
+/dist/
+/.runtime/
+/.venv/
+.ipynb_checkpoints/
+__pycache__/
+.pytest_cache/
+*.py[cod]
+.DS_Store
+# Also protect medical images/transforms accidentally saved elsewhere.
+*.nii
+*.nii.gz
+*.mha
+*.mhd
+*.nrrd
+*.dcm
+*.mat
+*.h5
+*.bval
+*.bvec
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.pdf
+*.html
+*.zip
+
+# Original teaching illustrations travel with the notebook.
+!/assets/a.png
+!/assets/b.png
+!/assets/MNI152_T1_1mm_brain.nii.gz
+!/docs/index.html
+
+# Only the attributed public structural example is included.
+!/data/UCSF-PDGM-0033/
+/data/UCSF-PDGM-0033/*
+!/data/UCSF-PDGM-0033/UCSF-PDGM-0033_T1.nii.gz
+!/data/UCSF-PDGM-0033/UCSF-PDGM-0033_T1c.nii.gz
+!/data/UCSF-PDGM-0033/UCSF-PDGM-0033_tumor_segmentation.nii.gz
+!/data/UCSF-PDGM-0033/provenance.json

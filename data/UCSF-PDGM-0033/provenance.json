@@ -1,0 +1,42 @@
+{
+  "source": "TCIA",
+  "case_id": "UCSF-PDGM-0033",
+  "collection_url": "https://www.cancerimagingarchive.net/collection/ucsf-pdgm/",
+  "dataset_doi": "10.7937/tcia.bdgf-8v37",
+  "package_id": "1065",
+  "license": "CC BY 4.0",
+  "downloaded_utc": "2026-11-18T19:03:17.004969+00:00",
+  "geometry": {
+    "t1_shape": [
+      240,
+      240,
+      155
+    ],
+    "t1_spacing_mm": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "structural_contrast": "T1c"
+  },
+  "files": [
+    {
+      "filename": "UCSF-PDGM-0033_T1.nii.gz",
+      "bytes": 3376218,
+      "sha256": "d5ae37ba43c887e06c6d941d4186f5cfce49b6dde7480f96a47978aa16ffe4af",
+      "source": "/UCSF-PDGM-v5/UCSF-PDGM-0033_nifti/UCSF-PDGM-0033_T1.nii.gz"
+    },
+    {
+      "filename": "UCSF-PDGM-0033_tumor_segmentation.nii.gz",
+      "bytes": 72066,
+      "sha256": "27814a2fd9309eb59960fb5925a2067aa2d2e865e277af5768d1ec8f6d2946c6",
+      "source": "/UCSF-PDGM-v5/UCSF-PDGM-0033_nifti/UCSF-PDGM-0033_tumor_segmentation.nii.gz"
+    },
+    {
+      "filename": "UCSF-PDGM-0033_T1c.nii.gz",
+      "bytes": 3298219,
+      "sha256": "5106e2b78802e06cfd3c26e24349125ae736926068a2c5b39395b95d1a0d7886",
+      "source": "/UCSF-PDGM-v5/UCSF-PDGM-0033_nifti/UCSF-PDGM-0033_T1c.nii.gz"
+    }
+  ]
+}
