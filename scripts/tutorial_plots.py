@@ -5,6 +5,7 @@ from nibabel.processing import resample_from_to
 from scipy.ndimage import binary_fill_holes
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap, TwoSlopeNorm
+from matplotlib.lines import Line2D
 from matplotlib.patches import Patch, Rectangle
 
 VIEW_WIDTH_MM = 220.0
@@ -259,6 +260,64 @@ def show_registration(fixed_path, moving_path, destination, title, labels=False)
     if not labels:
         moving = normalized(moving)
     _orthogonal_view(fixed_image, fixed, moving, title, destination=destination, labels=labels)
+
+
+def show_model_comparison(fixed_path, image_paths, mask_paths, destination, *,
+                          intensity_reference_path, coronal_slice=108,
+                          zoom=(-40., 40., 20., 100.)):
+    """Compare three fits and their brain outlines on an axis-aligned MNI grid."""
+    if len(image_paths) != 3 or set(image_paths) != set(mask_paths):
+        raise ValueError('Supply three registered images and their matching brain masks.')
+    reference = ras(fixed_path)
+    if not np.allclose(reference.affine[:3, :3], np.diag(np.diag(reference.affine)[:3])):
+        raise ValueError('The comparison expects an axis-aligned reference grid.')
+    if not 0 <= coronal_slice < reference.shape[1]:
+        raise ValueError('coronal_slice must be within the reference image.')
+    side = zoom[1] - zoom[0]
+    if side <= 0 or not np.isclose(side, zoom[3] - zoom[2]):
+        raise ValueError('The enlarged region must be square, with positive width.')
+    reference_values = reference.get_fdata(dtype=np.float32)
+    xs = reference.affine[0, 3] + np.arange(reference.shape[0]) * reference.affine[0, 0]
+    zs = reference.affine[2, 3] + np.arange(reference.shape[2]) * reference.affine[2, 2]
+    dx, dz = reference.affine[0, 0], reference.affine[2, 2]
+    extent = (xs[0] - dx / 2, xs[-1] + dx / 2, zs[0] - dz / 2, zs[-1] + dz / 2)
+    y_mm = reference.affine[1, 3] + coronal_slice * reference.affine[1, 1]
+    reference_outline = binary_fill_holes(reference_values[:, coronal_slice, :] > 0)
+    intensity_reference = values(intensity_reference_path)
+    low, high = np.percentile(intensity_reference[intensity_reference > 0], [2, 98])
+    reference_color, subject_color = '#26c7e0', '#ffb347'
+    fig, axes = _panel_figure(rows=2)
+    for column, (method, path) in enumerate(image_paths.items()):
+        image, mask = ras(path), ras(mask_paths[method])
+        for candidate in (image, mask):
+            if candidate.shape != reference.shape or not np.allclose(candidate.affine, reference.affine):
+                plt.close(fig)
+                raise ValueError(f'{method}: images and masks must occupy the reference grid.')
+        array = image.get_fdata(dtype=np.float32)
+        subject_outline = binary_fill_holes(mask.get_fdata()[:, coronal_slice, :] > .5)
+        for row in range(2):
+            ax = axes[row, column]
+            ax.imshow(array[:, coronal_slice, :].T, extent=extent, origin='lower',
+                      cmap='gray', vmin=low, vmax=high, interpolation='nearest')
+            ax.contour(xs, zs, reference_outline.T, levels=[.5],
+                       colors=[reference_color], linewidths=1.05)
+            ax.contour(xs, zs, subject_outline.T, levels=[.5],
+                       colors=[subject_color], linewidths=1.05, linestyles='--')
+            if row == 0:
+                ax.add_patch(Rectangle((zoom[0], zoom[2]), side, side, fill=False,
+                                       edgecolor='white', linewidth=.7, linestyle=':'))
+                _square_panel(ax, extent, axis=1, title=method)
+            else:
+                _square_panel(ax, zoom, axis=1, side=side,
+                              title=f'Superior boundary: {side:g} × {side:g} mm')
+    fig.suptitle(f'Rigid, affine and SyN at the same coronal slice (MNI y = {y_mm:g} mm)',
+                 fontsize=13, y=.975)
+    fig.legend(handles=[Line2D([], [], color=reference_color, lw=1.6,
+                               label='MNI brain outline'),
+                        Line2D([], [], color=subject_color, lw=1.6, linestyle='--',
+                               label='Transformed T1 brain outline')],
+               loc='lower center', bbox_to_anchor=(.5, .012), ncol=2, frameon=False)
+    _show_figure(fig, destination)
 
 
 def make_qc(fixed_path, image_paths, destination=None):
