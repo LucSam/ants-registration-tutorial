@@ -6,7 +6,7 @@ A Jupyter tutorial on rigid, affine and SyN registration with ANTs. It starts wi
 
 | Format | Use |
 |---|---|
-| [Read online](https://lucsam.github.io/ants-registration-tutorial/) | Read the explanations, code and saved figures |
+| [HTML reading copy](docs/index.html) | Download the repository and open this file in a browser to read the explanations, code and saved figures |
 | [Jupyter notebook](ants_registration_tutorial.ipynb) | Run the code, change parameters and use the slice, overlay and transform controls |
 
 Use JupyterLab for the interactive lesson. For offline reading, download the repository and open [docs/index.html](docs/index.html) in a browser.
@@ -67,7 +67,7 @@ After running and saving the notebook, export it:
 .venv/bin/python scripts/build_book.py
 ```
 
-The exporter creates [docs/index.html](docs/index.html) with all six chapters and the saved figures. This is also the source for the online reading copy. A local copy is written under `outputs/UCSF-PDGM-0033/`.
+The exporter creates [docs/index.html](docs/index.html) with all six chapters and the saved figures. A second copy is written under `outputs/UCSF-PDGM-0033/`.
 
 Edit the data and attribution text in [DATA.md](DATA.md). The exporter synchronizes this text with chapter 6 in the notebook before creating the HTML page.
 
